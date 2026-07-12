@@ -203,7 +203,6 @@ def main():
     print()
     nome_com_espacos = ' '.join(nome_sem_espacos.upper())
     print(nome_com_espacos)
-    print("-"*50)
     
     # Exibe cada nivel da piramide
     for nivel in pi:
