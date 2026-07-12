@@ -172,4 +172,10 @@ A Numerologia Cabalística é um sistema que combina elementos da Cabala Judaica
 
 ---
 
+### Update Piramide invertida do Nome e sequencias Negativas
+
+![Print](sequencia_negativa.png)
+
+---
+
 **⚠️ Aviso**: Este programa é fornecido para fins educacionais e de estudo. A numerologia deve ser vista como uma ferramenta de autoconhecimento, não como uma fonte de verdades absolutas.
