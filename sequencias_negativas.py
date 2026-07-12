@@ -169,14 +169,14 @@ def main():
     os.system('cls' if sys.platform == 'win32' else 'clear')
     
     # Cabecalho do programa
-    print("="*50)
+    print("="*80)
     print("  ANALISADOR DE PIRAMIDE")
-    print("="*50)
+    print("="*80)
     print()
     print("  Sequencias Negativas = 3 numeros iguais")
     print("  indicam pontos de atencao")
     print()
-    print("="*50)
+    print("="*80)
     print()
     
     # Entrada do usuario
@@ -190,7 +190,10 @@ def main():
     nome_sem_espacos = nome.replace(" ", "")
     
     # Limpa a tela para exibir os resultados
-    os.system('cls' if sys.platform == 'win32' else 'clear')
+    #os.system('cls' if sys.platform == 'win32' else 'clear')
+    
+    print("")    
+    print("="*80)
     
     # Calcula a piramide
     pi = piramide(nome_sem_espacos)
@@ -228,7 +231,7 @@ def main():
         espacos = " " * (len(pi[0]) - len(nivel))
         print(f"{espacos}{' '.join(linha)}")
     
-    print("-"*50)
+    print("-"*80)
     print()
     print("  LEGENDA:")
     print(f"  {Fore.RED}Numeros em vermelho = Sequencia Negativa (3 iguais){Style.RESET_ALL}")
