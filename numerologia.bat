@@ -1,0 +1,2 @@
+python numerologia.py
+pause
