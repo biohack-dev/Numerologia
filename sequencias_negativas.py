@@ -25,19 +25,6 @@
 # Version........: 1.0.0
 #
 #===============================================================================
-#
-# ###########
-# # History #
-# ###########
-#
-#     12/07/2026 : Criacao do template
-#     12/07/2026 : Implementacao da logica de piramide numerologica
-#     12/07/2026 : Adicao de deteccao de sequencias negativas (3 numeros iguais)
-#     12/07/2026 : Correcao da reducao de numeros para 1-9
-#     12/07/2026 : Adicao de espacamento entre letras do nome
-#     12/07/2026 : Testes e validacao do sistema
-#
-#===============================================================================
 
 import re
 import sys
@@ -49,7 +36,6 @@ if sys.platform == 'win32':
     colorama.init(autoreset=True)
     from colorama import Fore, Style
 else:
-    # Cores ANSI para Linux/Mac
     class Fore:
         RED = '\033[91m'
         GREEN = '\033[92m'
@@ -61,7 +47,6 @@ else:
         RESET_ALL = '\033[0m'
 
 # Dicionario de correspondencia letra-numero (Tabela Pitagorica)
-# Cada letra do alfabeto e convertida em um numero de 1 a 9
 COD = {
     'A':1,'I':1,'Q':1,'J':1,'Y':1,'B':2,'K':2,'R':2,
     'C':3,'G':3,'L':3,'S':3,'D':4,'M':4,'T':4,
@@ -69,58 +54,32 @@ COD = {
     'O':7,'Z':7,'F':8,'P':8
 }
 
+# Descricoes resumidas e objetivas das sequencias negativas
+DESCRICOES = {
+    1: '''111 – A pessoa fica limitada, perdendo a coragem de se aventurar em algo novo. Pode, também, ficar um longo período inativo (a), desempregado (a) ou mesmo impotente para realizar o que quer que seja permanecendo nesse estado o tempo que durar o Arcano que domina o período. Esta sequência indica, eventualmente, tendência para desenvolver alguns distúrbios ou doenças cardíacas.''',
+    2: '''222 – Esta sequência indica possibilidade de timidez e indecisão, podendo levar o (a) seu (a) possuidor (a) a ser subjugado (a) por aqueles mais próximos, sejam eles amigos, sócios, colegas de trabalho ou simplesmente conhecidos. Faz perder a autoestima, limitando-o (a) quanto a seus projetos e realizações. Pode, eventualmente, surgir alguma doença que provoque dependência.''',
+    3: '''333 – Indica possibilidade de ser incompreendido (a), dificuldade no diálogo, principalmente com colegas de trabalho e com a (o) companheira (o). Tem dificuldade de se impor em seus projetos e para convencer as pessoas. Esta sequência pode, eventualmente, indicar possibilidade de doenças respiratórias ou de articulações.''',
+    4: '''444 – Reflete dificuldade na realização profissional. Pode ser mal remunerado (a) e as perspectivas profissionais serem difíceis, ou ter dificuldade em se manter no emprego, ou se dar bem em qualquer atividade. Pode, eventualmente, indicar possibilidade de doenças reumáticas ou arteriais.''',
+    5: '''555 – Indica possíveis mudanças não desejadas de casa, de profissão ou meio social. Sob esta influência, a pessoa tem frequentes altos e baixos, não se fixando profissionalmente, sempre à procura de melhores oportunidades, e ter dificuldade para as encontrar. Pode, também, causar fuga do meio social em que habita e a desenvolver alguma doença de pele.''',
+    6: '''666 – Indica possibilidade de haver decepções com amigos, sócios, parentes e até com o cônjuge (namorada (o) ou companheira (o)), que não o (a) compreende em seus propósitos e sentimentos. Algum tipo de doença cardíaca pode aparecer nesse estado.''',
+    7: '''777 – Faz com que se afaste de tudo e de todos. Pode levar ao desmando, transforma-lo (a) em um ser dependente, vaidoso (a), arrogante e, consequentemente, vítima da própria intolerância. A persistência nesse sentimento provoca sentimentos de solidão, doenças nervosas, dependências e, eventualmente, algum tipo de câncer.''',
+    8: '''888 – Esta sequência torna arredio (a), afastando-o (a) das atividades sociais. Caso não seja evoluído (a) espiritualmente, poderá descontrolar-se emocionalmente com muita facilidade. Sob esta vibração, poderá oscilar entre a riqueza e a pobreza e, como consequência desse estresse, poderá desenvolver alguma doença.''',
+    9: '''999 – Reflete uma tendência a passar por dificuldades financeiras, eventualmente perdas de bens, eventuais fracassos nos negócios e vários tipos de provações provocadas pelos períodos de estagnação. Tudo isto pode afetar o sistema nervoso e o coração.'''
+}
 def reduzir(n):
-    """
-    Reduz um numero para um unico digito entre 1 e 9.
-    
-    Args:
-        n (int): Numero a ser reduzido
-        
-    Returns:
-        int: Numero reduzido entre 1 e 9
-        
-    Example:
-        >>> reduzir(15)
-        6  # 1+5 = 6
-        >>> reduzir(28)
-        1  # 2+8 = 10, 1+0 = 1
-    """
     while n > 9:
         n = sum(int(d) for d in str(n))
     return n
 
 def piramide(nome):
-    """
-    Constroi a piramide numerologica de um nome.
-    
-    A piramide e construida da seguinte forma:
-    - Primeira linha: numeros correspondentes a cada letra do nome
-    - Linhas seguintes: soma dos numeros adjacentes da linha anterior, reduzidos a 1-9
-    - Ultima linha: numero final (destino)
-    
-    Args:
-        nome (str): Nome a ser analisado
-        
-    Returns:
-        list: Lista de listas, onde cada sublista representa um nivel da piramide
-        
-    Example:
-        >>> piramide("Ana")
-        [[1, 5, 1], [6, 6], [3]]
-    """
-    # Remove caracteres especiais e converte para maiusculas
     nome_limpo = re.sub(r'[^A-Za-z]', '', nome).upper()
-    
-    # Converte letras em numeros usando a tabela COD
     nums = [COD.get(l, 0) for l in nome_limpo]
     
     if not nums:
         return []
     
-    # Inicializa a piramide com a primeira linha
     resultado = [nums[:]]
     
-    # Constroi as linhas seguintes
     while len(nums) > 1:
         nums = [reduzir(nums[i] + nums[i+1]) for i in range(len(nums)-1)]
         resultado.append(nums[:])
@@ -128,57 +87,20 @@ def piramide(nome):
     return resultado
 
 def sequencia_3(nivel):
-    """
-    Detecta sequencias de tres numeros iguais em um nivel da piramide.
-    
-    Sequencias negativas sao pontos de atencao que indicam:
-    - Energia bloqueada
-    - Desafios a serem superados
-    - Licoes importantes
-    
-    Args:
-        nivel (list): Lista de numeros de um nivel da piramide
-        
-    Returns:
-        list: Lista de tuplas (indice, valor) para cada sequencia encontrada
-        
-    Example:
-        >>> sequencia_3([1, 1, 1, 2, 2, 2])
-        [(0, 1), (3, 2)]
-    """
     seq = []
     i = 0
     while i < len(nivel) - 2:
         if nivel[i] == nivel[i+1] == nivel[i+2]:
             seq.append((i, nivel[i]))
-            i += 3  # Pula os 3 numeros da sequencia
+            i += 3
         else:
             i += 1
     return seq
 
-# =============================================================================
-# PROGRAMA PRINCIPAL
-# =============================================================================
-
 def main():
-    """
-    Funcao principal do programa.
-    Gerencia a interface do usuario e a exibicao dos resultados.
-    """
-    # Limpa a tela para melhor visualizacao
     os.system('cls' if sys.platform == 'win32' else 'clear')
     
-    # Cabecalho do programa
-    print("="*80)
-    print("  ANALISADOR DE PIRAMIDE")
-    print("="*80)
-    print()
-    print("  Sequencias Negativas = 3 numeros iguais")
-    print("  indicam pontos de atencao")
-    print()
-    print("="*80)
-    print()
-    
+    print("")
     # Entrada do usuario
     nome = input("Nome: ").strip()
     
@@ -186,67 +108,52 @@ def main():
         print("\nNome vazio! Encerrando...")
         sys.exit(0)
     
-    # Remove espacos para processamento
     nome_sem_espacos = nome.replace(" ", "")
-    
-    # Limpa a tela para exibir os resultados
-    #os.system('cls' if sys.platform == 'win32' else 'clear')
-    
-    print("")    
-    print("="*80)
-    
-    # Calcula a piramide
     pi = piramide(nome_sem_espacos)
     
     if not pi:
         print("\nNenhum caractere valido encontrado!")
         sys.exit(0)
     
-    # Exibe o nome com espacos entre as letras
+    # Exibe o nome com espacos
     print()
     nome_com_espacos = ' '.join(nome_sem_espacos.upper())
     print(nome_com_espacos)
     
-    # Exibe cada nivel da piramide
+    # Exibe a piramide com destaque em vermelho
     for nivel in pi:
-        # Detecta sequencias negativas no nivel
         seq = sequencia_3(nivel)
         linha = []
         i = 0
         
         while i < len(nivel):
-            # Verifica se o indice atual e inicio de uma sequencia
             if any(s[0] == i for s in seq):
-                # Destaca os 3 numeros da sequencia em vermelho
                 linha.append(f"{Fore.RED}{Style.BRIGHT}{nivel[i]}{Style.RESET_ALL}")
                 linha.append(f"{Fore.RED}{Style.BRIGHT}{nivel[i+1]}{Style.RESET_ALL}")
                 linha.append(f"{Fore.RED}{Style.BRIGHT}{nivel[i+2]}{Style.RESET_ALL}")
                 i += 3
             else:
-                # Numeros normais (sem destaque)
                 linha.append(str(nivel[i]))
                 i += 1
         
-        # Alinha o nivel a direita para formar a piramide
         espacos = " " * (len(pi[0]) - len(nivel))
         print(f"{espacos}{' '.join(linha)}")
     
-    print("-"*80)
+    # Exibe apenas as sequencias encontradas (sem duplicatas)
     print()
-    print("  LEGENDA:")
-    print(f"  {Fore.RED}Numeros em vermelho = Sequencia Negativa (3 iguais){Style.RESET_ALL}")
-    print("  Indicam bloqueios ou desafios a serem superados")
-    print()
+    sequencias_unicas = []
+    for nivel in pi:
+        seq = sequencia_3(nivel)
+        for pos, valor in seq:
+            if valor not in sequencias_unicas:
+                sequencias_unicas.append(valor)
     
-    # Informacoes adicionais sobre sequencias negativas
-    print("  INTERPRETACAO:")
-    print("  - Sequencias de 3 numeros iguais mostram areas de conflito")
-    print("  - Quanto mais sequencias, mais desafios na area")
-    print("  - O numero repetido indica a natureza do desafio")
-    print()
+    if sequencias_unicas:
+        for valor in sequencias_unicas:
+            print(DESCRICOES.get(valor, "Descricao nao disponivel"))
+            print()
     
-    input("Tecle ENTER para sair...")
+    input("\nTecle ENTER para sair...")
 
-# Ponto de entrada do programa
 if __name__ == "__main__":
     main()
