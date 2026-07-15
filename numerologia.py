@@ -18,9 +18,9 @@
 # Dependency.....: Python 3.7+
 #
 # Date...........: 12/07/2026
-# Update.........: None
+# Update.........: 15/07/2026 - Correção de funções e cálculos
 #
-# Version........: 1.0.0
+# Version........: 1.0.1
 #
 #===============================================================================
 #
@@ -30,6 +30,7 @@
 #
 #     12/07/2026 : Criação do template
 #     12/07/2026 : Testes do projeto
+#     15/07/2026 : Correção de funções de redução e cálculos
 #
 #===============================================================================
 
@@ -37,8 +38,6 @@ import re
 import datetime
 from datetime import date
 import sys
-# Código modificado (txt)
-import datetime
 
 anoatual = date.today().year
 mesatual = date.today().month
@@ -253,7 +252,7 @@ Expressão = {
        '\nORIENTAÇÃO: Como gosta da sua liberdade, evite fazer julgamentos ou criticar demais as pessoas, pois elas podem ficar ressentidas com as suas decisões e, assim, não lhe prestarem bons serviços ou não colaborarem com seus projetos.',
     5: 'Pontos positivos: versatilidade, adaptabilidade, instintos fortes, sedução, sorte, ousadia, amor pela liberdade, espiritualidade, curiosidade, sociabilidade e misticismo.\n'
        '\nPontos negativos: falta de confiabilidade, mutação, procrastinação, inconsistência, libidinosidade, confiança extrema e teimosia.\n'
-       'O cinco é o número dos criativos, dos ousados, dos agitados e dos amantes da liberdade. A característica deste número o impele a viajar pelo mundo sempre em busca de saber, de novas experiências e também prazer. É um ser sociável, agradável e sempre bem-vindo em festas e reuniões. Gosta de ocupações diferentes, aquelas que o permitam estar em contato com pessoas, com o público, e que o deixem agir e exprimir-se livremente. Detesta receber ordens, principalmente de pessoas com estudo ou capacidade inferior às suas. Também não gosta de trabalhos pesados, enfadonhos, cansativos, preferindo os intelectuais, ou aqueles que o colocam em destaque, como chefe de vendas, de marketing, de criação, ou qualquer outro que implique no desejo de viver e pesquisar. Possui grande capacidade para lidar com quaisquer tipos de pessoas, sejam elas ricas, influentes ou intelectuais. O cinco, às vezes, tem surtos extraordinários de energia e coragem que lhe permitem reagir rapidamente a situações e agarrar as oportunidades. Possui uma mente excelente e precisa, e é capaz de ter pensamentos profundos, além de uma inclinação a pensar de forma técnica e analítica. O seu espírito independente o estimula a ver as coisas de uma maneira original e a buscar a liberdade pessoal. Porém, deve evitar ser voluntarioso ou obstinado e se tornar negativo e pouco comunicativo.'
+       'O cinco é o número dos criativos, dos ousados, dos agitados e dos amantes da liberdade. A característica deste número o impele a viajar pelo mundo sempre em busca de saber, de novas experiências e também prazer. É um ser sociável, agradável e sempre bem-vindo em festas e reuniões. Gosta de ocupações diferentes, aquelas que o permitem estar em contato com pessoas, com o público, e que o deixem agir e exprimir-se livremente. Detesta receber ordens, principalmente de pessoas com estudo ou capacidade inferior às suas. Também não gosta de trabalhos pesados, enfadonhos, cansativos, preferindo os intelectuais, ou aqueles que o colocam em destaque, como chefe de vendas, de marketing, de criação, ou qualquer outro que implique no desejo de viver e pesquisar. Possui grande capacidade para lidar com quaisquer tipos de pessoas, sejam elas ricas, influentes ou intelectuais. O cinco, às vezes, tem surtos extraordinários de energia e coragem que lhe permitem reagir rapidamente a situações e agarrar as oportunidades. Possui uma mente excelente e precisa, e é capaz de ter pensamentos profundos, além de uma inclinação a pensar de forma técnica e analítica. O seu espírito independente o estimula a ver as coisas de uma maneira original e a buscar a liberdade pessoal. Porém, deve evitar ser voluntarioso ou obstinado e se tornar negativo e pouco comunicativo.'
        '\nORIENTAÇÃO: Como terá muitas experiências na vida, deve usar essas experiências e o seu temperamento corajoso para levar até o fim os seus projetos, pois é de certa forma dispersivo, não conseguindo terminar o que começa, tendo mais começo do que fins.',
     6: 'Pontos positivos: mundanismo, amabilidade, compaixão, confiabilidade, compreensão, solidariedade, idealismo, vida doméstica, humanitarismo, senso artístico, equilíbrio.\n'
        '\nPontos negativos: descontentamento, ansiedade, timidez, teimosia, franqueza excessiva, perfeccionismo, dominação, egoísmo, desconfiança, cinismo e egocentrismo.\n'
@@ -580,13 +579,13 @@ AConseq4perigo = {
 }
 
 
-# Funções para calcular os valores
+# ================ FUNÇÕES CORRIGIDAS ================
 
 def separar_vogais_consoantes_formatado(nome):
     """
     Retorna três strings: linha de vogais, nome original, linha de consoantes
     """
-    vogais = 'AEIOUYÃÁÀÂÄÉÊËÍÌÏÎÓÔÕÖÒÚÙÛÜÇ'  # Inclui acentos e ç
+    vogais = 'AEIOUYÃÁÀÂÄÉÊËÍÌÏÎÓÔÕÖÒÚÙÛÜÇ'
     vogais_min = vogais.lower()
     vogais_set = set(vogais + vogais_min)
     
@@ -636,6 +635,7 @@ def calcular_valores_vogais_consoantes(vogais, consoantes, cabalacod):
     valor_consoantes = sum(cabalacod.get(letra.upper(), 0) for letra in consoantes)
     return valor_vogais, valor_consoantes
 
+
 def separar_vogais_consoantes_detalhado(nome):
     """
     Versão mais detalhada que retorna uma string formatada com vogais e consoantes
@@ -652,7 +652,6 @@ def separar_vogais_consoantes_detalhado(nome):
         else:
             consoantes_encontradas.append(letra)
     
-    # Retorna uma string em vez de usar print()
     resultado = []
     resultado.append(f"Nome: {nome}")
     resultado.append(f"Vogais: {' '.join(vogais_encontradas)}")
@@ -660,181 +659,162 @@ def separar_vogais_consoantes_detalhado(nome):
     resultado.append(f"Total de vogais: {len(vogais_encontradas)}")
     resultado.append(f"Total de consoantes: {len(consoantes_encontradas)}")
     return "\n".join(resultado)
-    
+
+
 def calcular(palavra):
-    # essa beleza aqui reduz a palavra em número. Mas ainda não é o número final,
-    #  pois como temos que verificar os 11, 22 e 33 ele reduz em 3 ou 2 algarismos.
+    """
+    Calcula o valor total da palavra somando os valores cabalísticos de cada letra
+    """
+    if not palavra:
+        return 0
     palavra = list(palavra)
     total = 0
     for letra in palavra:
-        value = cabalacod[letra]
+        value = cabalacod.get(letra, 0)
         total = total + value
-    return (total)
-def reduzirmes(numero):
-    # este aqui pega o numero formado das letras e reduz para um algarismo ou para 11 e 22.
-    if numero == 11:  # números 11, 22 não são reduzidos.
-        total = numero
-    else:
-        total = numero
-        tamanho = len(str(total))
-        if tamanho > 1:
-            while tamanho > 1:  # repetindo até o número seja reduzido em um dígito.
-                if total == 11:
-                    break
-                palavranum = str(total)
-                palavranum = list(palavranum)
-                total = 0
-                for letra in palavranum:
-                    total = total + int(letra)
-                tamanho = len(str(total))
-        else:
-            total = numero
-    return (total)
+    return total
+
+
 def reduzir(numero):
-    # este aqui pega o numero formado das letras e reduz para um algarismo ou para 11 e 22.
-    if numero == 11 or numero == 22:  # números 11, 22 não são reduzidos.
-        total = numero
-    else:
-        total = numero
-        tamanho = len(str(total))
-        if tamanho > 1:
-            while tamanho > 1:  # repetindo até o número seja reduzido em um dígito.
-                if total == 11 or total == 22:
-                    break
-                palavranum = str(total)
-                palavranum = list(palavranum)
-                total = 0
-                for letra in palavranum:
-                    total = total + int(letra)
-                tamanho = len(str(total))
-        else:
-            total = numero
-    return (total)
-def reduzirtotal(numero):
-    # este aqui pega o numero formado das letras e reduz para um algarismo ou para 11 e 22.
+    """
+    Reduz um número para um único dígito, exceto se for 11 ou 22 (números mestres)
+    """
+    if numero == 11 or numero == 22:
+        return numero
+    
     total = numero
-    tamanho = len(str(total))
-    if tamanho > 1:
-        while tamanho > 1:  # repetindo até o número seja reduzido em um dígito.
-            palavranum = str(total)
-            palavranum = list(palavranum)
-            total = 0
-            for letra in palavranum:
-                total = total + int(letra)
-            tamanho = len(str(total))
-    else:
-        total = numero
-    return (total)
+    while total > 9:
+        if total == 11 or total == 22:
+            break
+        digitos = str(total)
+        total = sum(int(d) for d in digitos)
+    return total
+
+
+def reduzirmes(numero):
+    """
+    Reduz um número para um único dígito, exceto se for 11
+    """
+    if numero == 11:
+        return 11
+    
+    total = numero
+    while total > 9:
+        if total == 11:
+            break
+        digitos = str(total)
+        total = sum(int(d) for d in digitos)
+    return total
+
+
+def reduzirtotal(numero):
+    """
+    Reduz um número para um único dígito (redução total, sem exceções para números mestres)
+    """
+    total = numero
+    while total > 9:
+        digitos = str(total)
+        total = sum(int(d) for d in digitos)
+    return total
+
+
 def reduzirdata(numero):
-    # Lindo, reduzimos aqui a data em um número de até duas casas decimais.
-    dia, mes, ano = numero.split('/')
-    datanasc = numero.replace("/", "")
-    # este aqui pega o numero formado das letras e reduz para um algarismo ou para 11 e 22.
-    if numero == 11 or numero == 22:  # números 11, 22 não são reduzidos.
-        total = numero
-    else:
-        total = numero
-        tamanho = len(str(total))
-        if tamanho > 1:
-            while tamanho > 1:  # repetindo até o número seja reduzido em um dígito.
-                if total == 11 or total == 22:
-                    break
-                else:
-                    total == 2 or total == 4
-                    break
-                palavranum = str(total)
-                palavranum = list(palavranum)
-                total = 0
-                for letra in palavranum:
-                    total = total + int(letra)
-                tamanho = len(str(total))
-        else:
-            total = numero
-    total = 0
+    """
+    Calcula o número da data de nascimento somando dia, mês e ano reduzidos
+    """
+    try:
+        dia, mes, ano = numero.split('/')
+    except ValueError:
+        return 0
+    
     dia1 = reduzir(int(dia))
     mes1 = reduzir(int(mes))
     ano1 = reduzir(int(ano))
     total = dia1 + mes1 + ano1
-    return (total)
+    return total
+
+
 def letnum(palavra):
-    # essa beleza aqui encontra os valores das letras da tabela de cabala.
+    """
+    Retorna uma lista com os valores cabalísticos de cada letra da palavra
+    """
+    if not palavra:
+        return []
     palavra = list(palavra)
     letranum = list()
     for letra in palavra:
-        value = cabalacod[letra]
+        value = cabalacod.get(letra, 0)
         letranum.append(value)
+    return letranum
 
-    return (letranum)
+
 def listanum(listaent):
+    """
+    Conta a frequência de cada número (1-9) em uma lista de valores
+    """
     lista = list(listaent)
-    tabelaletnum = list()
-    pri = seg = ter = quar = quin = sext = seti = oita = nona = 0
-    for c, v in enumerate(lista):
-        if v == 1:
-            pri += 1
-        elif v == 2:
-            seg += 1
-        elif v == 3:
-            ter += 1
-        elif v == 4:
-            quar += 1
-        elif v == 5:
-            quin += 1
-        elif v == 6:
-            sext += 1
-        elif v == 7:
-            seti += 1
-        elif v == 8:
-            oita += 1
-        elif v == 9:
-            nona += 1
-    tabelaletnum.insert(0, pri)
-    tabelaletnum.insert(1, seg)
-    tabelaletnum.insert(2, ter)
-    tabelaletnum.insert(3, quar)
-    tabelaletnum.insert(4, quin)
-    tabelaletnum.insert(5, sext)
-    tabelaletnum.insert(6, seti)
-    tabelaletnum.insert(7, oita)
-    tabelaletnum.insert(8, nona)
-    return (tabelaletnum)
+    tabelaletnum = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    for v in lista:
+        if 1 <= v <= 9:
+            tabelaletnum[v - 1] += 1
+    return tabelaletnum
+
+
 def retornacarma(lista):
-    # vai adicionando os valores do carma em uma lista de carmas
+    """
+    Identifica posições onde o valor é zero (lições cármicas)
+    """
     lista = list(lista)
     listacarma = list()
-    for c in enumerate(lista):
-        aux = c[1]
+    for i, aux in enumerate(lista):
         if aux == 0:
-            valor = c[0] + 1
-            listacarma.append(valor)
-    return (listacarma)
+            listacarma.append(i + 1)
+    return listacarma
+
+
 def tendenciaoculta(lista):
+    """
+    Identifica números que aparecem mais de 3 vezes (tendências ocultas)
+    """
     lista = list(lista)
     tendenocult = list()
-    for c in enumerate(lista):
-        if c[1] > 3:
-            aux = c[0] + 1
-            tendenocult.append(aux)
-    return (tendenocult)
+    for i, aux in enumerate(lista):
+        if aux > 3:
+            tendenocult.append(i + 1)
+    return tendenocult
+
+
 def compararlistas(desafio, comparacoes):
-    # a função começa aqui e a entrada são as duas listas preenchidas a primeiro de desafio a segunda dos comparadores
+    """
+    Compara duas listas e retorna os elementos em comum
+    """
     doencas = list()
     for i in desafio:
         for c in comparacoes:
             if i == c:
-                valor = c
-                doencas.append(valor)
-    return (doencas)
+                doencas.append(c)
+    return doencas
+
+
 def relacinterval(listareznum):
-    relinval = list()
+    """
+    Calcula as relações intervalares baseado na frequência dos números
+    """
+    if not listareznum:
+        return []
+    
     m = max(listareznum)
+    relinval = list()
     for i, j in enumerate(listareznum):
         if j == m:
-            relinval.append(int(i) + 1)
+            relinval.append(i + 1)
+    return relinval
 
-    return (relinval)
-def tabelaano(dia, mes, ano, ):
-    # essa def aqui pega a data de nascimento e coloca dentro de um dicionário, o índice é o ano,e o valor é o resultado numerologico
+
+def tabelaano(dia, mes, ano):
+    """
+    Gera um dicionário com os anos e seus respectivos números pessoais
+    """
     anolist = list()
     tabano = dict()
     anox = int(ano)
@@ -843,87 +823,103 @@ def tabelaano(dia, mes, ano, ):
         y += 1
         anolist.append(anox)
         anox += 1
+    
     for i in anolist:
         anopessoal = '%s/%s/%s' % (dia, mes, i)
         anopessoal = reduzir(reduzirdata(anopessoal))
-        tabano.update({int(i): int(reduzirtotal(reduzir(anopessoal)))})
-    return (tabano)
+        tabano[i] = reduzir(anopessoal)
+    return tabano
+
+
 def contarep(listaaver, indice):
-    N = int(0)
+    """
+    Conta quantas vezes o valor no índice aparece em outras posições
+    """
+    N = 0
     for k in range(0, 9):
         if k != indice:
             if listaaver[k] == listaaver[indice]:
                 N = N + 1
     return N
+
+
 def lisPosMaiores(listaaver):
-    maior = listaaver[0]
+    """
+    Retorna as posições dos maiores valores na lista
+    """
+    if not listaaver:
+        return []
+    
+    maior = max(listaaver)
     lista = list()
-    for k in range(1, 9):
-        if maior < listaaver[k]:
-            maior = listaaver[k]
     for k in range(0, 9):
         if listaaver[k] == maior:
-            lista.append(int(k))
+            lista.append(k)
     return lista
+
+
 def retiradup(listasaida):
+    """
+    Remove elementos duplicados de uma lista mantendo a ordem
+    """
     listaret = list()
     for cada in listasaida:
         if cada not in listaret:
             listaret.append(cada)
     return listaret
-def relacinterval(listareznum):
-    listapos = list()
-    listamaiores = lisPosMaiores(listareznum)
 
-    for cada in listamaiores:
-        for j in range(0, 9):
-            if cada != j:
-                N = contarep(listareznum, j)
 
-                if listareznum[cada] >= 2 * N and listareznum[cada] != 0:
-                    listapos.append(int(cada + 1))
-    listapos = retiradup(listapos)
-    return (listapos)
 def matrixnum(palavra):
+    """
+    Converte uma palavra em uma lista de números cabalísticos
+    """
+    if not palavra:
+        return []
     palavra = list(palavra)
     numeros = list()
     for letra in palavra:
-        value = cabalacod[letra]
+        value = cabalacod.get(letra, 0)
         numeros.append(value)
-    return (numeros)
+    return numeros
+
+
 def giromatrix(matrixnum):
+    """
+    Gera o próximo nível da pirâmide numérica somando pares adjacentes
+    """
+    if not matrixnum or len(matrixnum) == 1:
+        return []
+    
     temp = list()
-    cont = 0
-    while cont < (len(matrixnum)-1):
-        value = matrixnum[cont] + matrixnum[cont + 1]
+    for i in range(len(matrixnum) - 1):
+        value = matrixnum[i] + matrixnum[i + 1]
         if len(matrixnum) == 2:
             value = reduzir(value)
             temp.append(value)
-            break
+        else:
+            value = reduzirtotal(value)
+            temp.append(value)
+    return temp
 
-        value = reduzirtotal(value)
-        temp.append(value)
-        cont += 1
-    return (temp)
+
 def piramidnum(matrix):
-    """Gera a pirâmide numérica a partir da matriz de números do nome"""
-    if not matrix:
+    """
+    Gera a pirâmide numérica completa a partir da matriz de números do nome
+    """
+    if not matrix or len(matrix) == 0:
         return []
     
     resultado = []
-    nivel_atual = matrix[:]  # Copia da matriz original
+    nivel_atual = matrix[:]
     
     # Adiciona o primeiro nível (base da pirâmide)
     resultado.append(nivel_atual[:])
     
     # Enquanto tiver mais de 1 elemento, continua somando
     while len(nivel_atual) > 1:
-        novo_nivel = []
-        for i in range(len(nivel_atual) - 1):
-            soma = nivel_atual[i] + nivel_atual[i + 1]
-            # Reduz a soma para um único dígito (ou 11/22)
-            soma_reduzida = reduzirtotal(soma)
-            novo_nivel.append(soma_reduzida)
+        novo_nivel = giromatrix(nivel_atual)
+        if not novo_nivel:
+            break
         nivel_atual = novo_nivel
         resultado.append(nivel_atual[:])
     
@@ -955,42 +951,21 @@ conscompleto = re.findall(r"[QJBKR'CGLSDMTHNVWXÇZFP]", nomecompleto)
 # numerologia do primeiro nome
 numerolpnome = reduzir(calcular(primeironome))
 
-# calculando o número de impressão ( soma das consoantes)
-impress = reduzir(calcular(conscompleto))
+# calculando o número de impressão (soma das consoantes)
+impress = reduzir(calcular(''.join(conscompleto)))
 aparencia = reduzirtotal(impress)
 
-# calculando o numero de expressão ( reduzir nome inteiro)
+# calculando o numero de expressão (reduzir nome inteiro)
 reqexpr = calcular(nomecompleto)
-if reqexpr == 20 or reqexpr == 31 or reqexpr == 40:
-    contecons = 0
-    reqexpr = 0
-    while contecons < len(extenso):
-        reqexpr = reqexpr + reduzir(extenso(contecons))
-        contecons += 1
-    else:
-        expressao = reduzir(reqexpr)
-else:
-    expressao = reduzir(calcular(nomecompleto))
+expressao = reduzir(reqexpr)
 
-# calculando número de motivação ( soma das vogais)
-# Sempre que a soma dos números das vogáis que correspondem ao número de motivação for, por, exemplo 20, 31 ou 40, eles podem ou não se transformar em 2 ou 4 dependendo da somatória de cada nome em separado.
-reqmotiv = calcular(vogaiscompleto)
-if reqmotiv == 20 or reqmotiv == 31 or reqmotiv == 40:
-    contvog = 0
-    reqmotiv = 0
-    while contvog < len(extenso):
-        wogel = re.findall(r'[AIYÕÊÁÍÛÃEÔUOÉÂÎÚÓ]', extenso[contvog])
-        reqmotiv = reqmotiv + reduzir(calcular(wogel))
-        contvog += 1
-    else:
-        motivac = reduzir(reqmotiv)
+# calculando número de motivação (soma das vogais)
+reqmotiv = calcular(''.join(vogaiscompleto))
+motivac = reduzir(reqmotiv)
 
-else:
-    motivac = reduzir(calcular(vogaiscompleto))
-
-# calculando o número do destino ( soma de todos os números da data de nascimento)
-destinonum = int(reduzirdata(nascimento))
-destinonum = int(reduzir(destinonum))
+# calculando o número do destino (soma de todos os números da data de nascimento)
+destinonum = reduzirdata(nascimento)
+destinonum = reduzir(destinonum)
 
 # Lições cármicas
 licaocarm = list()
@@ -999,11 +974,9 @@ listanumsnome = listanum(letranumero)
 licaocarm = retornacarma(listanumsnome)
 
 # TENDÊNCIAS OCULTAS
-tendenciasocultas = list()
 tendocult = tendenciaoculta(listanumsnome)
 
 # RELAÇÕES INTERVALORES
-
 ltno = letnum(primeironome)
 lnn = listanum(ltno)
 relinterval = relacinterval(lnn)
@@ -1011,8 +984,7 @@ relinterval = relacinterval(lnn)
 # RESPOSTA SUBCONSCIENTE
 respsub = 9 - len(licaocarm)
 
-# Dividas cármicas, para se saber se uma pessoa carrega Dívidas Cármicas, deve-se em principio observar o doa do seu nascimento:
-
+# Dividas cármicas
 divida = list()
 # dívidas de acordo com os dias
 if int(dia) == 13:
@@ -1023,45 +995,29 @@ elif int(dia) == 16:
     divida.append(16)
 elif int(dia) == 19:
     divida.append(19)
+
 # Dívidas de acordo com destino, motivação e expressão
+if destinonum == 4 or motivac == 4 or expressao == 4:
+    if 13 not in divida:
+        divida.append(13)
 
-if destinonum == 4:
-    divida.append(13)
-elif motivac == 4:
-    divida.append(13)
-elif expressao == 4:
-    divida.append(13)
+if destinonum == 5 or motivac == 5 or expressao == 5:
+    if 14 not in divida:
+        divida.append(14)
 
-if destinonum == 5:
-    divida.append(14)
+if destinonum == 7 or motivac == 7 or expressao == 7:
+    if 16 not in divida:
+        divida.append(16)
 
-elif motivac == 5:
-    divida.append(14)
+if destinonum == 1 or motivac == 1 or expressao == 1:
+    if 19 not in divida:
+        divida.append(19)
 
-elif expressao == 5:
-    divida.append(14)
-
-if destinonum == 7:
-    divida.append(16)
-elif motivac == 7:
-    divida.append(16)
-elif expressao == 7:
-    divida.append(16)
-
-if destinonum == 1:
-    divida.append(19)
-elif motivac == 1:
-    divida.append(19)
-elif expressao == 1:
-    divida.append(19)
-
-# Número da missão : o número de destino mais o número de Expressão somados e reduzidos.
-# observar os números 11 e 22 não se reduzem.
+# Número da missão
 missao = destinonum + expressao
 missao = reduzir(missao)
 
-# Ano pessoal : soma do dia, do mês de nascimento e do ano em curso no momento em que estiver fazendo o cálculo.
-# calculo para aniversário, caso antes reduz em 1 o ano da analise numerológica.
+# Ano pessoal
 if int(mes) >= mesatual:
     if int(dia) < diaatual:
         anoatual = anoatual - 1
@@ -1072,25 +1028,21 @@ anopessoal = reduzirtotal(reduzirdata(anopessoal))
 # Mês pessoal
 mespessoal = mesatual + anopessoal
 mespessoal = reduzirmes(mespessoal)
-#totalmeses = mesespessoal()
-
 
 # Tabela de Ano Pessoal
-tabelano = []
 tabelano = tabelaano(dia, mes, ano)
 
 # CICLOS DE VIDA
-# 1º ciclo - tem o número reduzido do mês do nascimento, salvo o mês 11 que não se reduz.
-
+# 1º ciclo
 if int(mes) == 11:
     numciclo1 = 11
 else:
     numciclo1 = reduzir(int(mes))
+
 idadeciclo1 = (37 - destinonum)
-periodociclo1 = (37 - destinonum) + int(ano)
+periodociclo1 = idadeciclo1 + int(ano)
 
-# 2º ciclo - tem o número reduzido do dia do nascimento, salvo 11 e 22.
-
+# 2º ciclo
 if int(dia) == 11:
     numciclo2 = 11
 elif int(dia) == 22:
@@ -1099,8 +1051,7 @@ else:
     numciclo2 = reduzir(int(dia))
 idadeciclo2 = 27
 
-# 3º ciclo - tem o número reduzido do ano do nascimento salvo os números 11 e 22;
-
+# 3º ciclo
 if int(ano) == 11:
     numciclo3 = 11
 elif int(ano) == 22:
@@ -1110,11 +1061,9 @@ else:
 
 # RELAÇÃO DE CICLO DE VIDA COM AS LIÇÕES CARMICAS
 listanumciclo = [numciclo1, numciclo2, numciclo3]
-relacaovidacarma = list()
 relacaovidacarma = compararlistas(listanumciclo, licaocarm)
 
 # DESAFIOS
-# 1º desafio - reduzir o dia e o mes do nascimento então subtrair o menor do maior.
 diad = reduzirtotal(int(dia))
 mesd = reduzirtotal(int(mes))
 if mesd < diad:
@@ -1122,14 +1071,14 @@ if mesd < diad:
 else:
     desafio1 = mesd - diad
 desafio1 = reduzirtotal(desafio1)
-# 2º desafio - reduzir o dia e o ano de nascimento então subtrair o menor do maior.
+
 anod = reduzirtotal(int(ano))
 if anod < diad:
     desafio2 = diad - anod
 else:
     desafio2 = anod - diad
 desafio2 = reduzirtotal(desafio2)
-# 3º desafio ou desafio principal - deve-se subtrair o menor do maior entre os desafios.
+
 if desafio1 < desafio2:
     desafioprinc = desafio2 - desafio1
 else:
@@ -1137,30 +1086,24 @@ else:
 desafioprinc = reduzirtotal(desafioprinc)
 
 # MOMENTOS DECISIVOS
-# 1º Momento Decisivo -  é a soma reduzida do dia e do mês do nascimento. Sua duração é igual à do 1º ciclo de vida
-# não se reduzem os números 11 e 22.
-
 md1 = reduzir(int(dia)) + reduzir(int(mes))
 md1 = reduzir(md1)
-# 2º Momento Decisivo - é a soma reduzida do dia e do ano do nascimento.
+
 md2 = reduzir(int(dia)) + reduzir(int(ano))
 md2 = reduzir(md2)
-# 3º Momento Decisivo - é a soma reduzida do 1º e do 2º momento decisivo.
+
 md3 = reduzir(md1) + reduzir(md2)
 md3 = reduzir(md3)
-# 4º Momento Decisivo - é a soma reduzida do 1º e do 2º momento decisivo.
+
 md4 = reduzir(int(mes)) + reduzir(int(ano))
 md4 = reduzir(md4)
+
 mdmotivac = 0
 mdexpressao = 0
 mdestino = 0
-mdlista = list()
-mdlista.append(md1)
-mdlista.append(md2)
-mdlista.append(md3)
-mdlista.append(md4)
+mdlista = [md1, md2, md3, md4]
 
-# verificação de igualdade sobre fatos do MD.
+# verificação de igualdade sobre fatos do MD
 if md1 == motivac or md2 == motivac or md3 == motivac or md4 == motivac:
     mdmotivac = 1
 if md1 == expressao or md2 == expressao or md3 == expressao or md4 == expressao:
@@ -1169,79 +1112,63 @@ if md1 == destinonum or md2 == destinonum or md3 == destinonum or md4 == destino
     mdestino = 1
 
 # DIA DO MÊS FAVORÁVEL
-diaux = (numerosfavoraveis[int(mes) - 1][int(dia)][1])
-diafavoravel = list()
-diafavoravel.append(diaux[0])
-diafavoravel.append(diaux[1])
-auxnum = 0
-auxnum = diaux[1] * 2
-diafavoravel.append(auxnum)
-operador = 0
-while auxnum < 30:
-    auxnum = auxnum + diaux[0]
+try:
+    diaux = (numerosfavoraveis[int(mes) - 1][int(dia)][1])
+    diafavoravel = list()
+    diafavoravel.append(diaux[0])
+    diafavoravel.append(diaux[1])
+    auxnum = diaux[1] * 2
     diafavoravel.append(auxnum)
-    operador = 1
-    if operador == True:
-        auxnum = auxnum + diaux[1]
+    operador = 0
+    while auxnum < 30:
+        auxnum = auxnum + diaux[0]
         diafavoravel.append(auxnum)
-        operador = 0
-examinador = 31
-examinador2 = 0
-while examinador < 41:
-    examinador += 1
-    if (examinador in diafavoravel):
-        examinador2 = examinador
-if examinador2 in diafavoravel:
-    diafavoravel.remove(examinador2)
+        operador = 1
+        if operador == 1:
+            auxnum = auxnum + diaux[1]
+            diafavoravel.append(auxnum)
+            operador = 0
+    # Remove valores acima de 31
+    diafavoravel = [d for d in diafavoravel if d <= 31]
+except (IndexError, TypeError):
+    diafavoravel = []
 
-# GRAUe DE ASCENSÃO
-vogais = reduzirtotal(calcular(vogaiscompleto))
-consoantes = reduzirtotal(calcular(conscompleto))
-if vogais == consoantes:
+# GRAU DE ASCENSÃO
+vogais_total = reduzirtotal(calcular(''.join(vogaiscompleto)))
+consoantes_total = reduzirtotal(calcular(''.join(conscompleto)))
+
+if vogais_total == consoantes_total:
     ascensao = "Estamos diante de um espírito elevado que veio a este planeta (neste momento) para iluminar outras almas."
-elif vogais > consoantes:
-    ascensao = 'Estamos diante de um espírito que alcançou um elevado grau de honrarias e,' \
-               ' transgredindo as Leis Naturais, foi "rebaixado", voltando agora em um meio inferior' \
-               ' ao que viveu antes.'
+elif vogais_total > consoantes_total:
+    ascensao = 'Estamos diante de um espírito que alcançou um elevado grau de honrarias e, transgredindo as Leis Naturais, foi "rebaixado", voltando agora em um meio inferior ao que viveu antes.'
 else:
     ascensao = 'Estamos diante de um espírito em ascensão.'
 
-# NÚMEROS DO AMOR E RELACIONAMENTOS -  Soma do número de expressão mais Destino.
+# NÚMEROS DO AMOR E RELACIONAMENTOS
 numamor = expressao + destinonum
 numamor = reduzirtotal(numamor)
 
 # ANO UNIVERSAL, MES UNIVERSAL E DIA UNIVERSAL
-anouniversal = reduzirtotal(ano)
-mesuniversal = reduzirtotal(mes) + anouniversal
+anouniversal = reduzirtotal(int(ano))
+mesuniversal = reduzirtotal(int(mes)) + anouniversal
 mesuniversal = reduzirtotal(mesuniversal)
-diauniversal = reduzirtotal(dia) + mesuniversal
+diauniversal = reduzirtotal(int(dia)) + mesuniversal
 diauniversal = reduzirtotal(diauniversal)
 
-# ANO PESSOAL, MES PESSOAL E DIA PESSOAL
-# POSSIVELMENTE AQUI ENTRA A IDEIA DE FAZER UMA TABELA PARA A PESSOA ACOMPANHAR OU O DIÁRIO DE VARIOS DIAS E ANOS.
-# COMO ANOS PASSADOS, E ANOS FUTUROS E COMO FOI... FAZER UMA HISTÓRIA.
-
-
 # NÚMERO QUE SE HARMONIZAM DE ACORDO COM O DIA DO NASCIMENTO
-harmoniadia = reduzirtotal(dia)
-incompativelmes = reduzirtotal(mes)
-# falta a saber como faz com o mes incompativel
-
-
-# Harmonia numérica. entre duas pessoas
-
+harmoniadia = reduzirtotal(int(dia))
 
 # SAÚDE PELO NÚMERO DE DESAFIO
 listadesafio = [desafio1, desafio2, desafioprinc]
 listacomparacao = [numciclo1, numciclo2, numciclo3, md1, md2, md3, md4, destinonum]
 doencasi = compararlistas(listadesafio, listacomparacao)
 
-#Piramide numérica
+# Piramide numérica
 mtx = matrixnum(nomecompleto)
 result = piramidnum(mtx)
 
 
-# print de tela
+# ================ SAÍDA ================
 
 CRED = '\033[91m'
 CEND = '\033[0m'
@@ -1465,8 +1392,7 @@ print('=' * 80)
 print(f'{"NUMEROLOGIA CABALÍSTICA":^40}')
 print(div)
 
-# Print de texto
-
+# ================ SALVAR EM ARQUIVO TXT ================
 
 # Nome do arquivo
 nome_arquivo = '{} {} {}.txt'.format(nome, datanasc, date.today())
@@ -1495,35 +1421,30 @@ with open(nome_arquivo, 'w', encoding='utf-8') as arquivo:
     arquivo.write(f'{nome.upper()}\n')
     arquivo.write(f'{linha_consoantes}\n\n')
 
-    # VERSÃO DETALHADA - CORRIGIDO
+    # VERSÃO DETALHADA
     arquivo.write('VERSÃO DETALHADA:\n')
     arquivo.write('-' * 40 + '\n')
     arquivo.write(f'{separar_vogais_consoantes_detalhado(nome)}\n\n')    
 
     arquivo.write('=' * 80 + '\n\n')
 
-    # ===== PIRÂMIDE NUMÉRICA COM ALINHAMENTO PERFEITO =====
+    # ===== PIRÂMIDE NUMÉRICA =====
     arquivo.write('PIRÂMIDE NUMÉRICA DO NOME\n')
     arquivo.write('=' * 80 + '\n')
 
-    # Lista de letras e números
     letras = list(namelist)
-    numeros = mtx  # matriz original
+    numeros = mtx
 
-    # Garante que as duas listas tenham o mesmo tamanho
     if len(letras) == len(numeros):
-        # Cria uma linha alternando letra e número (para exibir lado a lado)
         linha_letras = " ".join(letras)
         linha_numeros = " ".join(str(n) for n in numeros)
         
         arquivo.write(linha_letras + '\n')
         arquivo.write(linha_numeros + '\n')
     else:
-        # Fallback: exibe separadamente
         arquivo.write(" ".join(letras) + '\n')
         arquivo.write(" ".join(str(n) for n in numeros) + '\n')
 
-    # Demais níveis da pirâmide
     for nivel in result[1:]:
         espacos = " " * (len(result[0]) - len(nivel))
         arquivo.write(espacos + " ".join(str(n) for n in nivel) + '\n')
